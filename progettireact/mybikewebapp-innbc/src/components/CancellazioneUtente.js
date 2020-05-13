@@ -1,6 +1,6 @@
 import React from 'react';
 //import LabelAndInput from './helper/LabelAndInput';
-import collegamentoConDB from '../api/collegamentoConDB';
+import collegamentoConDB from './api/collegamentoConDB';
 import ErrorForm from './helper/ErrorForm';
 
 class CancellazioneUtente extends React.Component{

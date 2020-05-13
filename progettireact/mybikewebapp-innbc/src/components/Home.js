@@ -1,38 +1,97 @@
 import React from 'react';
-import collegamentoConDB from '../api/collegamentoConDB';
+import collegamentoConDB from './api/collegamentoConDB';
+import TableHelper from './helper/TableHelper';
+import contract from './smartcontract/contract';
+import web3 from './smartcontract/web3';
 
 class Home extends React.Component{
 
   constructor(props){
     super(props);
-    this.onCollegamentoConDB=this.onCollegamentoConDB.bind(this);
 
+    //this.onCollegamentoConDB=this.onCollegamentoConDB.bind(this);
     this.state={
-      risultatoDB:''
+      listaDiRichieste:[]
     }
   }
 
-  onCollegamentoConDB= async (event)=>{
+  async componentDidMount(){
+    this.setState({
+      listaDiRichieste:[]
+    });
+
     try {
-      const walletAddress='ox';
-      const response= await collegamentoConDB.post('/verificautente', {walletAddress});
-      if(response!==true){
+      const response= await collegamentoConDB.get('/requests/mostrarichieste');
+      console.log(response.data);
+      if(response!==false){
         this.setState({
-          risultatoDB:'false'
+          listaDiRichieste:[...this.state.listaDiRichieste, response.data]
         })
       }
-    } catch(err){
+      console.log(this.state.listaDiRichieste);
+        // console.log(this.state.listaDiRichieste[0][1].nome);
+      const {history} = this.props;
+      history.push('/');
+    }
+    catch(err){
       console.log(err)
     }
   }
 
+  onNegativeClick=async(_id)=>{
+    console.log(_id);
+    //Cambiamento stato richiestaCompletata
+    await collegamentoConDB.post('/requests/richiestaverificata',{_id});
+    window.location.reload(false);
+
+  }
+
+  onPositiveClick= async (_id,marca,modello,telaio,colore,tipologiaBicicletta,fotoBicicletta,
+    dataDAcquisto,fotoDataDAcquisto,segniParticolari,fotoSegniParticolari,idBicicletta)=>{
+    console.log(_id);
+    //Chiamata allo SC
+
+    try{
+      window.ethereum.enable();
+      const accounts= await web3.eth.getAccounts();
+      await contract.methods.mint(
+              marca,
+              modello,
+              telaio,
+              colore,
+              tipologiaBicicletta,
+              fotoBicicletta,
+              dataDAcquisto,
+              fotoDataDAcquisto,
+              segniParticolari,
+              fotoSegniParticolari,
+              idBicicletta
+            ).send({
+              from: accounts[0],
+            });
+      //Cambiamento stato richiestaCompletata nel DB -> Notificare l'utente dell'hash tramite mail
+       await collegamentoConDB.post('/requests/richiestaverificata',{_id});
+       const idUtente=_id;
+       await collegamentoConDB.post('/ownerships/aggiungipossesso',{idUtente,idBicicletta});
+       window.location.reload(false);
+    } catch(err){
+      console.log(err);
+    }
+  }
+
+
+
   render(){
     return(
-      <div>
-        <button onClick={this.onCollegamentoConDB}>
-          Collegamento con DB
-        </button>
-        {this.state.risultatoDB}
+      <div className="ui container">
+      {
+        this.state.listaDiRichieste.length===0
+        ? <p>Non ci sono richieste da approvare</p>
+        :
+          <div>
+            <TableHelper onPositiveClick={this.onPositiveClick} onNegativeClick={this.onNegativeClick} lista={this.state.listaDiRichieste} />
+          </div>
+      }
       </div>
     )
   }
