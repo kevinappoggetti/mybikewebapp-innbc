@@ -14,7 +14,7 @@ class TableHelper extends React.Component{
     <table className="ui striped table">
       <thead>
         <tr>
-          <th>Id Utente</th>
+          <th>Id Richiesta</th>
           <th>Nome</th>
           <th>Cognome</th>
           <th>Email</th>
@@ -38,7 +38,8 @@ class TableHelper extends React.Component{
                   ()=>this.props.onPositiveClick(
                     list._id,list.marca,list.modello,list.telaio,list.colore,list.tipologiaBicicletta,
                     list.fotoBicicletta,list.dataDAcquisto,list.fotoDataDAcquisto,list.segniParticolari,
-                    list.fotoSegniParticolari,list.idBicicletta)
+                    list.fotoSegniParticolari,list.idBicicletta,list.nome,list.cognome,list.dataDiNascita,
+                    list.citta,list.indirizzo,list.cap,list.email)
                 }>Approva</button>
                 <button type="button" onClick={()=>this.props.onNegativeClick(list._id)} className="ui button negative basic">Rifiuta</button>
               </td>

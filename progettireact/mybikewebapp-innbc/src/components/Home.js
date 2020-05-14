@@ -30,8 +30,6 @@ class Home extends React.Component{
       }
       console.log(this.state.listaDiRichieste);
         // console.log(this.state.listaDiRichieste[0][1].nome);
-      const {history} = this.props;
-      history.push('/');
     }
     catch(err){
       console.log(err)
@@ -47,7 +45,8 @@ class Home extends React.Component{
   }
 
   onPositiveClick= async (_id,marca,modello,telaio,colore,tipologiaBicicletta,fotoBicicletta,
-    dataDAcquisto,fotoDataDAcquisto,segniParticolari,fotoSegniParticolari,idBicicletta)=>{
+    dataDAcquisto,fotoDataDAcquisto,segniParticolari,fotoSegniParticolari,idBicicletta,nome,cognome,
+    dataDiNascita,citta,indirizzo,cap,email)=>{
     console.log(_id);
     //Chiamata allo SC
 
@@ -71,12 +70,21 @@ class Home extends React.Component{
             });
       //Cambiamento stato richiestaCompletata nel DB -> Notificare l'utente dell'hash tramite mail
        await collegamentoConDB.post('/requests/richiestaverificata',{_id});
-       const idUtente=_id;
-       await collegamentoConDB.post('/ownerships/aggiungipossesso',{idUtente,idBicicletta});
+       await collegamentoConDB.post('/ownerships/aggiungipossesso',{email,idBicicletta});
+       const utenteVerificato= await collegamentoConDB.post('/verificautente',{email});
+       console.log("utenteVerificato"+utenteVerificato);
+       if(utenteVerificato.data!==true){
+         console.log("sono qui");
+         const walletAddress="wallet";
+         const password="password";
+         await collegamentoConDB.post('/inserisciutente',{nome,cognome,dataDiNascita,
+         citta,indirizzo,cap,email,walletAddress,password})
+       }
        window.location.reload(false);
     } catch(err){
       console.log(err);
     }
+
   }
 
 

@@ -10,9 +10,6 @@ const Header = ()=>{
         </Link>
       </div>
       <div className="right menu">
-        <Link to="/creazionetoken" className="item">
-          Creazione Token
-        </Link>
         <Link to="/cancellazioneutente" className="item">
           Cancellazione Utente
         </Link>

@@ -2,7 +2,6 @@ import React from 'react';
 import Header from '../Header';
 import {BrowserRouter, Route} from 'react-router-dom';
 import Home from '../components/Home';
-import CreazioneToken from '../components/CreazioneToken';
 import CancellazioneUtente from '../components/CancellazioneUtente';
 import TrasferimentoToken from '../components/TrasferimentoToken';
 
@@ -14,7 +13,6 @@ class App extends React.Component{
           <div>
             <Header />
             <Route path="/" exact component={Home} />
-            <Route path="/creazionetoken" exact component={CreazioneToken} />
             <Route path="/cancellazioneutente" exact component={CancellazioneUtente} />
             <Route path="/trasferimentotoken" exact component={TrasferimentoToken} />
           </div>
