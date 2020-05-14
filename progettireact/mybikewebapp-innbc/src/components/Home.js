@@ -22,8 +22,8 @@ class Home extends React.Component{
 
     try {
       const response= await collegamentoConDB.get('/requests/mostrarichieste');
-      console.log(response.data);
-      if(response!==false){
+      console.log("data"+response.data);
+      if(response.data!==false){
         this.setState({
           listaDiRichieste:[...this.state.listaDiRichieste, response.data]
         })
@@ -46,7 +46,7 @@ class Home extends React.Component{
 
   onPositiveClick= async (_id,marca,modello,telaio,colore,tipologiaBicicletta,fotoBicicletta,
     dataDAcquisto,fotoDataDAcquisto,segniParticolari,fotoSegniParticolari,idBicicletta,nome,cognome,
-    dataDiNascita,citta,indirizzo,cap,email)=>{
+    dataDiNascita,citta,indirizzo,cap,email,password)=>{
     console.log(_id);
     //Chiamata allo SC
 
@@ -71,15 +71,14 @@ class Home extends React.Component{
       //Cambiamento stato richiestaCompletata nel DB -> Notificare l'utente dell'hash tramite mail
        await collegamentoConDB.post('/requests/richiestaverificata',{_id});
        await collegamentoConDB.post('/ownerships/aggiungipossesso',{email,idBicicletta});
-       const utenteVerificato= await collegamentoConDB.post('/verificautente',{email});
-       console.log("utenteVerificato"+utenteVerificato);
-       if(utenteVerificato.data!==true){
-         console.log("sono qui");
-         const walletAddress="wallet";
-         const password="password";
-         await collegamentoConDB.post('/inserisciutente',{nome,cognome,dataDiNascita,
-         citta,indirizzo,cap,email,walletAddress,password})
-       }
+       // const utenteVerificato= await collegamentoConDB.post('/verificautente',{email});
+       // console.log("utenteVerificato"+utenteVerificato);
+       // if(utenteVerificato.data!==true){
+       //   console.log("sono qui");
+       //   const walletAddress="wallet";
+       //   await collegamentoConDB.post('/inserisciutente',{nome,cognome,dataDiNascita,
+       //   citta,indirizzo,cap,email,walletAddress,password})
+       // }
        window.location.reload(false);
     } catch(err){
       console.log(err);
