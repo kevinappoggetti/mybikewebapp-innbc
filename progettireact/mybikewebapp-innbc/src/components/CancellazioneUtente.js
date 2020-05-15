@@ -39,25 +39,28 @@ class CancellazioneUtente extends React.Component{
   //SUBMIT DELLA FORM
   onSubmitForm= async(event)=>{
     event.preventDefault();
-
+    this.refs.btneliminautente.setAttribute("disabled","disabled");
+    this.setState({utenteInDatabase:''})
     if(this.state.email===""){
       this.setState({
         errorEmail:'Devi fornire una mail'
       })
+      this.refs.btneliminautente.removeAttribute("disabled");
     } else{
       this.setState({
         errorEmail:''
       })
+      this.refs.btneliminautente.removeAttribute("disabled");
     }
 
     if(this.state.email!==""){
       try{
-        console.log("sono qui");
         const email=this.state.email;
         await collegamentoConDB.post('/cancellautente',{email});
         this.setState({
           utenteInDatabase:"Utente Cancellato"
         })
+        window.location.reload(false);
       } catch(err){
         console.log("Something went wrong");
         this.setState({
@@ -75,8 +78,8 @@ class CancellazioneUtente extends React.Component{
         <div className="ui form segment">
           <form className="ui form" onSubmit={this.onSubmitForm}>
             <div className="equal width fields">
-              <label className="ui">Email</label>
-              <input className="ui" type="text" value={this.state.email} onChange={this.setEmail} />
+              <label htmlFor="cancellautente" className="ui">Email</label>
+              <input id="cancellautente" className="ui" type="text" value={this.state.email} onChange={this.setEmail} />
 
             </div>
             {
@@ -84,7 +87,7 @@ class CancellazioneUtente extends React.Component{
               ? null
               : <ErrorForm campo={"Email"} error={this.state.errorEmail} action={this.resetErrorMessage} />
             }
-            <button className="ui button basic primary" type="submit">
+            <button ref="btneliminautente" className="ui button basic primary" type="submit">
               <i className="search icon" />
               Elimina l'utente
             </button>

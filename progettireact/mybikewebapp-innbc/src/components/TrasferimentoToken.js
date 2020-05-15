@@ -14,7 +14,8 @@ class TrasferimentoToken extends React.Component{
 
   async componentDidMount(){
     this.setState({
-      listaDiTrasferimenti:[]
+      listaDiTrasferimenti:[],
+      isLoading:true
     });
 
     try {
@@ -26,8 +27,14 @@ class TrasferimentoToken extends React.Component{
         })
       }
       console.log(this.state.listaDiTrasferimenti);
+      this.setState({
+        isLoading:false
+      })
     }
     catch(err){
+      this.setState({
+        isLoading:false
+      })
       console.log(err)
     }
   }
@@ -51,7 +58,7 @@ class TrasferimentoToken extends React.Component{
         const dataDiNascita="data";
         const citta="citta";
         const indirizzo= "indirizzo";
-        const cap="99999"
+        const cap="cap"
         const walletAddress="wallet address"
         const password="password";
         const nome=nomeDestinatario;
@@ -59,7 +66,7 @@ class TrasferimentoToken extends React.Component{
         await collegamentoConDB.post('/inserisciutente',{nome,cognome,
         dataDiNascita,citta,indirizzo,cap,email,walletAddress,password});
       }
-      //window.location.reload(false);
+      window.location.reload(false);
     } catch(err){
       console.log(err);
     }
