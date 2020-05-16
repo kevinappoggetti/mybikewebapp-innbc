@@ -1,6 +1,7 @@
 import React from 'react';
 import collegamentoConDB from './api/collegamentoConDB';
 import TableTrasferimentoHelper from './helper/TableTrasferimentoHelper';
+import Loader from './helper/Loader';
 
 class TrasferimentoToken extends React.Component{
 
@@ -8,7 +9,8 @@ class TrasferimentoToken extends React.Component{
     super(props);
 
     this.state={
-      listaDiTrasferimenti:[]
+      listaDiTrasferimenti:[],
+      isLoading:false
     }
   }
 
@@ -20,13 +22,12 @@ class TrasferimentoToken extends React.Component{
 
     try {
       const response= await collegamentoConDB.get('/transfers/mostrarichieste');
-      console.log(response.data);
       if(response!==false){
         this.setState({
           listaDiTrasferimenti:[...this.state.listaDiTrasferimenti, response.data]
         })
       }
-      console.log(this.state.listaDiTrasferimenti);
+      console.log((this.state.listaDiTrasferimenti[0]));
       this.setState({
         isLoading:false
       })
@@ -76,13 +77,20 @@ class TrasferimentoToken extends React.Component{
     return(
       <div className="ui container">
       {
-        this.state.listaDiTrasferimenti.length===0
-        ? <p>Non ci sono trasferimenti da approvare</p>
-        :
-          <div>
-            <TableTrasferimentoHelper onPositiveClick={this.onPositiveClick} onNegativeClick={this.onNegativeClick} lista={this.state.listaDiTrasferimenti} />
+        this.state.isLoading===true
+        ? <Loader />
+        : <div>
+          {
+            this.state.listaDiTrasferimenti.length===0
+            ? <p>Non ci sono trasferimenti da approvare</p>
+            :
+              <div>
+                <TableTrasferimentoHelper onPositiveClick={this.onPositiveClick} onNegativeClick={this.onNegativeClick} lista={this.state.listaDiTrasferimenti} />
+              </div>
+          }
           </div>
       }
+
       </div>
     )
   }

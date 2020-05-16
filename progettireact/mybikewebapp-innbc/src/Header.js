@@ -16,6 +16,9 @@ const Header = ()=>{
         <Link to="/trasferimentotoken" className="item">
           Trasferimento Token
         </Link>
+        <Link to="/modificatoken" className="item">
+          Modifica Token
+        </Link>
       </div>
     </div>
   );
