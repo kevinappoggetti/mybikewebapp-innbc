@@ -40,10 +40,22 @@ class TrasferimentoToken extends React.Component{
     }
   }
 
-  onNegativeClick=async(_id)=>{
+  onNegativeClick=async(_id,emailMittente,emailDestinatario,idBicicletta)=>{
     console.log(_id);
     await collegamentoConDB.post('/transfers/richiestaverificata',{_id});
+    await collegamentoConDB.post('/transfers/inviaemailtokennontrasferito',{emailMittente,emailDestinatario,idBicicletta})
     window.location.reload(false);
+  }
+
+  generaPassword=()=>{
+    let result='';
+    const characters= 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let i;
+    const charactersLength = characters.length;
+    for(i = 0;i<6;i++){
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   }
 
   onPositiveClick=async(_id,idBicicletta,nomeMittente,cognomeMittente,emailMittente,
@@ -61,12 +73,15 @@ class TrasferimentoToken extends React.Component{
         const indirizzo= "indirizzo";
         const cap="cap"
         const walletAddress="wallet address"
-        const password="password";
+        const password=await this.generaPassword();
+        console.log(password);
         const nome=nomeDestinatario;
         const cognome=cognomeDestinatario;
         await collegamentoConDB.post('/inserisciutente',{nome,cognome,
         dataDiNascita,citta,indirizzo,cap,email,walletAddress,password});
+        await collegamentoConDB.post('/inviapasswordutente',{emailDestinatario,password});
       }
+      await collegamentoConDB.post('/transfers/inviaemailtokentrasferito',{emailMittente,emailDestinatario,idBicicletta});
       window.location.reload(false);
     } catch(err){
       console.log(err);

@@ -12,7 +12,8 @@ class ModificaToken extends React.Component{
 
     this.state={
       listaDiRichieste:[],
-      isLoading:false
+      isLoading:false,
+      transactionHash:''
     }
   }
 
@@ -42,14 +43,15 @@ class ModificaToken extends React.Component{
     }
   }
 
-  onNegativeClick=async(_id)=>{
+  onNegativeClick=async(_id,email,idBicicletta)=>{
     console.log(_id);
     await collegamentoConDB.post('/updates/richiestaverificata',{_id});
+    await collegamentoConDB.post('/updates/inviaemailtokennonmodificato',{email,idBicicletta});
     window.location.reload(false);
   }
 
 
-  onPositiveClick=async(_id,idBicicletta,marca,modello,telaio,colore,tipologiaBicicletta,
+  onPositiveClick=async(_id,idBicicletta,email,marca,modello,telaio,colore,tipologiaBicicletta,
   fotoBicicletta,dataDAcquisto,fotoDataDAcquisto,segniParticolari,fotoSegniParticolari)=>{
 
     try{
@@ -73,7 +75,14 @@ class ModificaToken extends React.Component{
         idBicicletta
       ).send({
         from:accounts[0]
-      })
+      }).on('transactionHash', (hash)=>{
+        this.setState({
+          transactionHash:hash
+        })
+        console.log(hash);
+      });
+      const hash=this.state.transactionHash;
+      await collegamentoConDB.post('/updates/inviaemailtokenmodificato',{email,idBicicletta,hash});
       window.location.reload(false);
     } catch(err){
       console.log(err);

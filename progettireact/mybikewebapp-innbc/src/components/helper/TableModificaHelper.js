@@ -10,6 +10,7 @@ class TableModificaHelper extends React.Component{
       <thead>
         <tr>
           <th>Id Bicicletta</th>
+          <th>Email</th>
           <th>Marca</th>
           <th>Modello</th>
           <th>Telaio</th>
@@ -23,17 +24,18 @@ class TableModificaHelper extends React.Component{
           return(
             <tr key={list._id}>
               <td>{list.idBicicletta}</td>
+              <td>{list.email}</td>
               <td>{list.marca}</td>
               <td>{list.modello}</td>
               <td>{list.telaio}</td>
 
               <td>
                 <button type="button" className="ui button positive basic" onClick={
-                  ()=>this.props.onPositiveClick(list._id,list.idBicicletta,list.marca,list.modello,list.telaio,
+                  ()=>this.props.onPositiveClick(list._id,list.idBicicletta,list.email,list.marca,list.modello,list.telaio,
                   list.colore,list.tipologiaBicicletta,list.fotoBicicletta,list.dataDAcquisto,list.fotoDataDAcquisto,
                   list.segniParticolari,list.fotoSegniParticolari)
                 }>Approva</button>
-                <button type="button" onClick={()=>this.props.onNegativeClick(list._id)} className="ui button negative basic">Rifiuta</button>
+                <button type="button" onClick={()=>this.props.onNegativeClick(list._id,list.email,list.idBicicletta)} className="ui button negative basic">Rifiuta</button>
               </td>
             </tr>
           );

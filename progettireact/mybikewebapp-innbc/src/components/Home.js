@@ -13,7 +13,8 @@ class Home extends React.Component{
     //this.onCollegamentoConDB=this.onCollegamentoConDB.bind(this);
     this.state={
       listaDiRichieste:[],
-      isLoading:false
+      isLoading:false,
+      transactionHash:''
     }
   }
 
@@ -43,10 +44,11 @@ class Home extends React.Component{
     }
   }
 
-  onNegativeClick=async(_id)=>{
+  onNegativeClick=async(_id,email,idBicicletta)=>{
     console.log(_id);
     //Cambiamento stato richiestaCompletata
     await collegamentoConDB.post('/requests/richiestaverificata',{_id});
+    await collegamentoConDB.post('/requests/inviaemailcreazionetokennegata',{email, idBicicletta});
     window.location.reload(false);
 
   }
@@ -77,10 +79,17 @@ class Home extends React.Component{
               idBicicletta
             ).send({
               from: accounts[0],
+            }).on('transactionHash', (hash)=>{
+              this.setState({
+                transactionHash:hash
+              })
+              console.log(hash);
             });
       //Cambiamento stato richiestaCompletata nel DB -> Notificare l'utente dell'hash tramite mail
        await collegamentoConDB.post('/requests/richiestaverificata',{_id});
        await collegamentoConDB.post('/ownerships/aggiungipossesso',{email,idBicicletta});
+       const hash = this.state.transactionHash
+       await collegamentoConDB.post('/requests/inviaemailcreazionetoken',{email,idBicicletta,hash});
        // const utenteVerificato= await collegamentoConDB.post('/verificautente',{email});
        // console.log("utenteVerificato"+utenteVerificato);
        // if(utenteVerificato.data!==true){

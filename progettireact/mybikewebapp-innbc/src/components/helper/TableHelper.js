@@ -41,7 +41,7 @@ class TableHelper extends React.Component{
                     list.fotoSegniParticolari,list.idBicicletta,list.nome,list.cognome,list.dataDiNascita,
                     list.citta,list.indirizzo,list.cap,list.email,list.password)
                 }>Approva</button>
-                <button type="button" onClick={()=>this.props.onNegativeClick(list._id)} className="ui button negative basic">Rifiuta</button>
+                <button type="button" onClick={()=>this.props.onNegativeClick(list._id,list.email,list.idBicicletta)} className="ui button negative basic">Rifiuta</button>
               </td>
             </tr>
           );

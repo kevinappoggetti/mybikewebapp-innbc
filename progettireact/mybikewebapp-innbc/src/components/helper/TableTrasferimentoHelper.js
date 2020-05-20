@@ -37,7 +37,7 @@ class TableTrasferimentoHelper extends React.Component{
                   ()=>this.props.onPositiveClick(list._id,list.idBicicletta,list.nomeMittente,list.cognomeMittente,list.emailMittente,
                   list.nomeDestinatario,list.cognomeDestinatario,list.emailDestinatario)
                 }>Approva</button>
-                <button type="button" onClick={()=>this.props.onNegativeClick(list._id)} className="ui button negative basic">Rifiuta</button>
+                <button type="button" onClick={()=>this.props.onNegativeClick(list._id,list.emailMittente,list.emailDestinatario,list.idBicicletta)} className="ui button negative basic">Rifiuta</button>
               </td>
             </tr>
           );
