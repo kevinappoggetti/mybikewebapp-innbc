@@ -23,6 +23,7 @@ class ModificaToken extends React.Component{
       isLoading:true
     });
 
+
     try {
       const response= await collegamentoConDB.get('/updates/mostrarichieste');
       console.log("data"+response.data);
@@ -55,7 +56,9 @@ class ModificaToken extends React.Component{
   fotoBicicletta,dataDAcquisto,fotoDataDAcquisto,segniParticolari,fotoSegniParticolari)=>{
 
     try{
-
+      this.setState({
+        isLoading:true
+      });
       window.ethereum.enable()
       await collegamentoConDB.post('/updates/richiestaverificata',{_id});
       const counter = await contract.methods.getCounterByTokenId(idBicicletta).call();
@@ -81,10 +84,16 @@ class ModificaToken extends React.Component{
         })
         console.log(hash);
       });
+      this.setState({
+        isLoading:false
+      })
       const hash=this.state.transactionHash;
       await collegamentoConDB.post('/updates/inviaemailtokenmodificato',{email,idBicicletta,hash});
       window.location.reload(false);
     } catch(err){
+      this.setState({
+        isLoading:false
+      })
       console.log(err);
     }
   }

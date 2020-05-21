@@ -87,6 +87,7 @@ class Home extends React.Component{
             });
       //Cambiamento stato richiestaCompletata nel DB -> Notificare l'utente dell'hash tramite mail
        await collegamentoConDB.post('/requests/richiestaverificata',{_id});
+       await collegamentoConDB.post('/requests/cancellarichiestestessotoken',{idBicicletta});
        await collegamentoConDB.post('/ownerships/aggiungipossesso',{email,idBicicletta});
        const hash = this.state.transactionHash
        await collegamentoConDB.post('/requests/inviaemailcreazionetoken',{email,idBicicletta,hash});
